@@ -21,11 +21,42 @@ import countries from 'world-countries';
 import _ from 'lodash';
 import CountryFlags from './countryFlags';
 import {getWidthPercent, getHeightPercent, getPercent} from './ratio';
-import CloseButton from './CloseButton';
+import CloseButton from 'CountryPickerCloseButton';
+
+type Country = {
+  cca2: string,
+  translations: {[translation: string]: string | {common: string}},
+  name: {common: string},
+  callingCode: Array<string>,
+  currency: string
+};
+type Props = {
+  cca2: string,
+  translation?: string,
+  onChange: (value: {cca2: string, callingCode: string, name: string, currency: string}) => void,
+  closeable?: boolean
+};
+type State = {
+  cca2: string,
+  currentCountry: Country,
+  modalVisible: boolean,
+  countries: Array<Country>
+};
 
 class CountryPicker extends Component {
+  props: Props;
+  state: State;
+  letters: Array<string>;
+  itemHeight: number;
+  listHeight: number;
+  visibleListHeight: number;
+  _scrollView: ListView;
 
-  constructor(props) {
+  static defaultProps = {
+    translation: 'eng'
+  };
+
+  constructor(props: Props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
@@ -43,13 +74,13 @@ class CountryPicker extends Component {
     this.listHeight = countries.length * this.itemHeight;
   }
 
-  getCountry({ cca2 }) {
+  getCountry(cca2: string): Country {
     return _.find(countries, {
       cca2
     });
   }
 
-  getCountryName(country) {
+  getCountryName(country: Country): string {
     const translation = this.props.translation || 'eng';
     return (
       country.translations[translation] &&
@@ -57,7 +88,7 @@ class CountryPicker extends Component {
     ) || country.name.common;
   }
 
-  orderCountryList() {
+  orderCountryList(): Array<Country> {
     return _(countries)
       .map(country => _.pick(
         country,
@@ -67,7 +98,7 @@ class CountryPicker extends Component {
       .value();
   }
 
-  onSelect(country) {
+  onSelect(country: Country): void {
 
     this.setState({
       modalVisible: false,
@@ -84,11 +115,11 @@ class CountryPicker extends Component {
     }
   }
 
-  setVisibleListHeight(offset) {
+  setVisibleListHeight(offset: number): void {
     this.visibleListHeight = getHeightPercent(100) - offset;
   }
 
-  scrollTo(letter) {
+  scrollTo(letter: string): void {
     // find position of first country that starts with letter
     const index = this.orderCountryList().map((country) => {
       return this.getCountryName(country)[0];
@@ -109,7 +140,7 @@ class CountryPicker extends Component {
     });
   }
 
-  renderCountry(country, index) {
+  renderCountry(country: Country, index: number): ReactElement {
     return (
       <TouchableOpacity
         key={index}
@@ -120,7 +151,7 @@ class CountryPicker extends Component {
     );
   }
 
-  renderLetters(letter, index) {
+  renderLetter(letter: string, index: number): ReactElement {
     return (
       <TouchableOpacity
         key={index}
@@ -133,7 +164,7 @@ class CountryPicker extends Component {
     );
   }
 
-  renderCountryDetail(country) {
+  renderCountryDetail(country: Country): ReactElement {
     return (
       <View style={styles.itemCountry}>
         <View style={styles.itemCountryFlag}>
@@ -173,13 +204,13 @@ class CountryPicker extends Component {
             contentContainerStyle={styles.contentContainer}
             ref={scrollView => { this._scrollView = scrollView; }}
             dataSource={this.state.countries}
-            renderRow={country => this.renderCountry(country)}
+            renderRow={(country, __, index) => this.renderCountry(country, index)}
             initialListSize={20}
             pageSize={countries.length - 20}
             onLayout={({nativeEvent: { layout: { y: offset} }}) => this.setVisibleListHeight(offset)}
           />
           <View style={styles.letters}>
-            {this.letters.map((letter, index) => this.renderLetters(letter, index))}
+            {this.letters.map((letter, index) => this.renderLetter(letter, index))}
           </View>
         </Modal>
       </View>
@@ -250,15 +281,5 @@ const styles = StyleSheet.create({
     fontSize: getHeightPercent(2.2)
   }
 });
-
-CountryPicker.propTypes = {
-  cca2: React.PropTypes.string.isRequired,
-  translation: React.PropTypes.string,
-  onChange: React.PropTypes.func.isRequired,
-  closeable: React.PropTypes.bool
-};
-CountryPicker.defaultProps = {
-  translation: 'eng'
-};
 
 module.exports = CountryPicker;

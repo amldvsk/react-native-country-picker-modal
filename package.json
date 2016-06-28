@@ -21,7 +21,13 @@
   },
   "homepage": "https://github.com/xcarpentier/react-native-country-picker-modal#readme",
   "devDependencies": {
-    "cz-conventional-changelog": "1.1.6"
+    "babel-core": "^6.10.4",
+    "babel-eslint": "^6.1.0",
+    "cz-conventional-changelog": "1.1.6",
+    "eslint": "^2.13.1",
+    "eslint-plugin-react": "^5.2.2",
+    "react": "^15.1.0",
+    "react-native": "^0.28.0"
   },
   "config": {
     "commitizen": {
@@ -29,7 +35,11 @@
     }
   },
   "dependencies": {
-    "lodash": "4.12.0",
+    "lodash": "4.13.1",
     "world-countries": "1.7.8"
+  },
+  "scripts": {
+    "eslint": "eslint src",
+    "flow": "flow"
   }
 }

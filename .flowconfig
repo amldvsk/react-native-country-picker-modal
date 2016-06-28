@@ -1,11 +1,46 @@
 [ignore]
-example/.*
+# We fork some components by platform.
+.*/*.android.js
+
+# Ignore examples
+.*/examples/.*
+
+# Ignore templates with `@flow` in header
+.*/local-cli/generator.*
+
+# Ignore wrong error suppression in FormData
+.*/node_modules/react-native/Libraries/Network/FormData.js
 
 [include]
 
 [libs]
+# Use RN libraries
+node_modules/react-native/Libraries/react-native/react-native-interface.js
+node_modules/react-native/flow/
 
 [options]
+# Make sure we find modules defined using @providesModule
+module.system=haste
+
+# Necessary for static defaultProps etc.
+esproposal.class_static_fields=enable
+esproposal.class_instance_fields=enable
+
+# Make sure flow can find images
+module.name_mapper='^image![a-zA-Z0-9$_-]+$' -> 'GlobalImageStub'
+module.name_mapper='^[./a-zA-Z0-9$_-]+\.\(bmp\|gif\|jpg\|jpeg\|png\|psd\|svg\|webp\|m4v\|mov\|mp4\|mpeg\|mpg\|webm\|aac\|aiff\|caf\|m4a\|mp3\|wav\|html\|pdf\)$' -> 'RelativeImageStub'
+
+# Private functions starting with an underscore should need no annotation
+munge_underscores=true
+
+# Suppress warnings
+suppress_type=$FlowIssue
+suppress_type=$FlowFixMe
+
+# Regexes
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(>=0\\.\\(2[0-7]\\|1[0-9]\\|[0-9]\\).[0-9]\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(>=0\\.\\(2[0-7]\\|1[0-9]\\|[0-9]\\).[0-9]\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)?:? #[0-9]+
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 
 [version]
-0.24.0
+^0.27.0

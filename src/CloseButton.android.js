@@ -1,3 +1,12 @@
+'use strict';
+
+/**
+ * react-native-country-picker
+ * @author xcarpentier<contact@xaviercarpentier.com>
+ * @flow
+ * @providesModule CountryPickerCloseButton
+ */
+
 import React from 'react';
 import {
   Image,
@@ -6,7 +15,7 @@ import {
   View
 } from 'react-native';
 
-const CloseButton = (props) => (
+const CloseButton = (props: Object): ReactElement => (
   <View style={styles.closeButton}>
     <TouchableNativeFeedback
       background={TouchableNativeFeedback.SelectableBackgroundBorderless()}

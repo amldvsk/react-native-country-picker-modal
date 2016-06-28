@@ -1,5 +1,11 @@
 'use strict';
 
+/**
+ * react-native-country-picker
+ * @author xcarpentier<contact@xaviercarpentier.com>
+ * @flow
+ */
+
 import React from 'react-native';
 let {height, width} = React.Dimensions.get('window');
 
@@ -11,15 +17,15 @@ if (React.Platform.OS === 'android') {
 class Ratio {
   constructor() {}
 
-  getWidthPercent(percentage) {
+  getWidthPercent(percentage: number): number {
     return (width * percentage) / 100;
   }
 
-  getHeightPercent(percentage) {
+  getHeightPercent(percentage: number): number {
     return (height * percentage) / 100;
   }
 
-  getPercent(percentage) {
+  getPercent(percentage: number): number {
     return ((height + width) / 2 * percentage) / 100;
   }
 }
