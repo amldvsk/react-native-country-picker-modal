@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import { View, Image, TouchableOpacity, Modal, Text, ListView } from 'react-native';
 import _ from 'lodash';
-
+import PropTypes from 'prop-types'
 import countries from '../data/countries';
 
 import { getHeightPercent } from './ratio';
@@ -18,10 +18,10 @@ const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 export default class CountryPicker extends Component {
   static propTypes = {
-    cca2: React.PropTypes.string.isRequired,
-    translation: React.PropTypes.string,
-    onChange: React.PropTypes.func.isRequired,
-    closeable: React.PropTypes.bool,
+    cca2: PropTypes.string.isRequired,
+    translation: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    closeable: PropTypes.bool,
   }
   static defaultProps = {
     translation: 'eng',
